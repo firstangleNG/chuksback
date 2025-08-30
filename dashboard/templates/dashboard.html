@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>Compueterhubuk Dashboard</title>{% endblock %}
+
+{% block cssFile %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <h1 class="text-center">Analytics Dashboard</h1>
+    <div class="container">
+        
+        <!-- Invoicing Section -->
+        <div class="container section-container">
+            <h2 class="text-center">Invoicing</h2>
+            <div class="card p-3 text-white bg-primary">
+                <h4>Total Revenue</h4>
+                <p id="total_revenue">{{ total_revenue }}</p>
+                <h4>Pending Payments</h4>
+                <p id="pending_payments">{{ pending_payments }}</p>
+            </div>
+        </div>
+
+        <!-- Repair Ticketing Section -->
+        <div class="container section-container">
+            <h2 class="text-center">Repair Ticketing</h2>
+            <div class="card p-3 text-white bg-success">
+                <h4>Total Repair Tickets</h4>
+                <p>{{ total_tickets }}</p>
+                <h4>Open Tickets</h4>
+                <p>{{ open_tickets }}</p>
+                <h4>Canceled Tickets</h4>
+                <p>{{ canceled }}</p>
+                <h4>Closed Tickets</h4>
+                <p>{{ closed_tickets }}</p>
+            </div>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="container section-container">
+            <h2 class="text-center">Inventory</h2>
+            <div class="card p-3 text-white bg-warning">
+                <h4>Low Stock Items</h4>
+                <p>{{ low_stock_items }}</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block jsFile %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

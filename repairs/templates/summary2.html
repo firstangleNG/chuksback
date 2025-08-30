@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>Repair Ticket Summary</title>{% endblock %}
+{% block cssFile %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="{% static 'css/base.css' %}" rel="stylesheet">
+<link href="{% static 'css/ticket_summary.css' %}" rel="stylesheet">
+<link href="{% static 'css/invoice.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="print-area">
+<div class="header-container">
+<div class="header">Repair Ticket</div>
+<div class="header-buttons" id="header-buttons"> 
+<label for="statusSelect">Update Status:</label>
+<select id="statusSelect" class="status-select">
+    <option value="{{ status }}">{{ status }}</option>
+    <option value="New">New</option>
+    <option value="Assigned">Assigned</option>
+    <option value="Diagnosed">Diagnosed</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Awaiting Parts">Awaiting Parts</option>
+    <option value="Completed">Completed</option>
+    <option value="On Hold">On Hold</option>
+    <option value="Closed">Closed</option>
+    <option value="Canceled">Canceled</option>
+</select>
+
+<div id="statusMessage"></div>
+
+<div class="email-container" id="email-container">
+<p id="email-messages"></p>
+<input type="text" id="emailInput" placeholder="Enter email">
+<button class="email-btn" id="send-email-btn"><i class="fas fa-envelope"></i>Email</button>
+<button class="cancel-btn" id="email-cancel-ntn" onclick="hideEmailContainer()">Cancel</button>
+</div>
+<button id="repairs-list-btn" class="icon-btn"><i class="fas fa-list" id="repairs-btn"></i>Repairs</button>
+<!-- <button class="icon-btn"><i class="fas fa-print"></i>Print</button> -->
+<div class="print-dropdown">
+<button class="print-btn icon-btn"><i class="fas fa-print"></i>Print</button>
+<div class="print-dropdown-menu">
+    <a href="#" data-option="full-page">Full Page Printer</a>
+    <a href="#" data-option="thermal">Thermal Printer</a>
+    <a href="#" data-option="email">Email Ticket</a>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-container">
+<div class="box" id="customer-proper-info">
+<p>Ticket#<span id="ticket-no">{{ ticket.ticket_id }}</span></p>
+<h3 class="data-container">Customer Information <i class="fas fa-pen edit-pen" onclick="getCustomerDetails()"></i>
+</h3>
+<p><strong>Name:</strong> <span id="customer_name"> {{ customer.first_name }} {{ customer.last_name }}</span></p>
+<hr>
+<p><strong>Email:</strong><span id="customer_email"> {{ customer.email }} </span></p>
+<hr>
+<p><strong>Phone:</strong> <span id="customer_phone"> {{ customer.phone|default:"Not Provided" }} 
+    <input type="text" id="customer_address" value="{{ address|default:'Not provided' }}" hidden>
+</span></p>
+<hr>
+
+<h3 class="data-container">Property Info <i class="fas fa-pen edit-pen" onclick="getPropertyDetails()"></i></h3>
+<input type="text" id="property_id" value="{{ property.id }}" hidden >
+<p><strong>IMEI/Serial No.:</strong> <span id="imei_serial_no"> {{ property.imei_serial_no }} </span></p>
+<hr>
+<p><strong>Brand:</strong><span id="brand"> {{ property.brand }} </span></p>
+<hr>
+<p><strong>Model:</strong><span id="model">  {{ property.model }} </span></p>
+<hr>
+<p><strong>More Details:</strong><span id="more_details"> {{ property.more_detail|default:"Not Provided" }} </span></p>
+<hr>
+</div>
+<div class="box">
+<h3 class="data-container">Ticket Information <i class="fas fa-pen edit-pen"  onclick="getTicketDetails()"></i></h3>
+<p><strong>Problem:</strong><span id="problem"> {{ ticket.problem }} </span></p>
+<p><strong>Date Created:</strong><span id="created_at"> {{ created_at }} </span></p>
+<hr>
+<p><strong>Due Date:</strong><span id="due_date">   {{ ticket.due_date|default:"Not Specified" }} 
+</span></p>
+<hr>
+<p><strong>Bin Location:</strong><span id="bin_location">  {{ ticket.bin_location|default:"Not Specified" }} </span></p>
+<hr>
+<p><strong>Technician:</strong> <span id="technician">
+{% if ticket.technician %}
+{{ ticket.technician.full_name }} 
+{% else %}
+Not Assigned
+{% endif %} 
+</span>
+
+</p>
+<select name="" id="technician-select">
+{% if technicians %}
+{% for technician in technicians %}
+<option value="{{ technician.id }}">{{ technician.full_name }} </option> 
+{% endfor %}
+{% else %}
+<option value="">No Technicians Available</option>
+{% endif %} 
+</select> 
+<hr>
+<p><strong>Salesman:</strong> <span id="salesman"> {{ salesman|default:"Not Assigned" }} </span> </p>
+<hr>
+<p><strong>Descriptions</strong> 
+<div class="description-container" id="description">
+{% if descriptions %}
+
+{% for description in descriptions %}
+
+<p class="description">{{ description.description |default:"No description added yet" }}</p>
+
+{% endfor %}
+
+{% endif %}
+</div>
+</div>
+</div>
+<div class="decscription">
+<input type="text" id="productSKU" placeholder="Description ">
+<button class="complete-btn" onclick="openModal('new-description')">New Description</button>
+<button class="complete-btn" id="btnNote">Note</button>
+</div>
+<!-- Invoicing area -->
+<form method="post" id="invoice-form">
+{% csrf_token %}
+
+<p id="message"></p>
+
+<p>Invoice#<span id="invoice_display">{{ ticket.invoice|default:'' }}</span></p>
+<input type="text" id="ticket_id" hidden>
+
+<input type="text" id="invoice" value="{{ ticket.invoice|default:'' }}" hidden> <!--Get the invoice for this ticket if it exists or empty string -->
+
+<table id="invoice-items">
+    <thead>
+        <tr>
+        <th>Service Name</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Price per Unit</th>
+        <th>Taxes (%)</th>
+        <th>Total</th>
+        <th>Remove</th>
+        <th>Save</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="text" name="service_name" required class="defaut-fields"></td>
+            <td><input type="text" name="description"></td>
+            <td><input type="number" name="quantity" class="quantity" min="1" value="1" required class="defaut-fields"></td>
+            <td><input type="number" name="price_per_unit" class="price" step="0.01" required class="defaut-fields"></td>
+            <td><select  name="tax" class="tax default-fields">
+                <option value="0">Not Taxed</option>
+                <option value="20">Taxed</option>
+              </select>
+            </td>
+            <td class="total">0.00</td>
+            <td><button type="button" class="remove-item" class="defaut-fields" hidden>Remove</button></td>
+            <td> <button type="submit" class="defaut-fields">Save</button></td>
+        </tr>
+
+    </tbody>
+</table>
+<!-- Add New Item Button -->
+<!-- <button type="button" id="add-item">Add Item</button> -->
+<!-- Submit and Print Buttons -->
+<!-- <button type="button" class="save-item">Save Invoice</button> -->
+<button type="button" id="update-invoice-btn">Update Invoice</button>
+<!-- Invoice Summary -->
+<h3>Summary</h3>
+<p class="cash-container">Subtotal: <span id="subtotal">0.00</span></p>
+<p class="cash-container">Total Tax: <span id="total-tax">0.00</span></p> 
+<p class="cash-container">Final Amount: <span id="final-amount">0.00</span></p>
+<div id="payment-history-container">
+<!-- payment data will appear here dynamically -->
+</div> 
+<!-- Payment Method -->
+<div class="payment-details-container">
+<select name="payment_method"  required id="payment-method">
+<option value="Credit/Debit Card">Credit/Debit Card</option>
+<option value="Cash">Cash</option>
+<option value="Paypal">PayPal</option>
+<option value="Stripe">Stripe</option>
+<option value="Bank Transfer">Bank Transfer</option>
+</select>
+<input type="number" min="0" step="1" placeholder="Enter Amount" id="payment-amount">
+<button id="add-payment-btn">Add to Payment</button>
+</div> 
+<div class="amount-due-container">
+<p class="cash-container"><strong>Amount Due  : </strong><span id="amount_due"></span></p>
+</div>
+</form>
+
+<!-- End of invoicing -->
+
+
+<div class="buttons">
+<button class="cancel-btn">Cancel</button>
+<button class="complete-btn">Complete</button>
+</div>
+
+
+<!-- Modal -->
+<div id="new-description" class="modal">
+    <div class="modal-content">
+    <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div class="description-container">
+    <h2>Add New Description</h2>
+        <p id="description_message"></p>
+    <form id="descriptionForm" style="width: auto;height: 50%;">
+    {% csrf_token %}
+    <textarea name="" rows="30" style="width: 100%;" id="descriptionInput"></textarea>
+    <div><button type="submit">New Description</button></div>
+    </form>
+    </div>
+</div>
+</div>
+<!-- End of new Description Modal -->
+
+<!-- Modal -->
+<div id="note" class="modal">
+<div class="modal-content">
+<span class="modal-close-btn" onclick="closeModal()">&times;</span>
+<div class="note-container">
+<h2>Add Note</h2>
+<form id="noteForm">
+{% csrf_token %}
+<textarea name="" rows="30" style="width: 100%;" id="noteInput"></textarea>
+<div><button type="submit">Create</button></div>
+
+</form>
+<p id="message"></p>
+</div>
+</div>
+</div>
+
+<!-- Customer infomation modal -->
+<div id="customer-info" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div class="customer-container">
+            <h2>Update Customer Details</h2>
+
+            <form id="customer-form">             
+                <input type="text" id="customer-id" hidden>
+                
+                <div class="form-group">
+                    <label for="first-name">First Name<span class="required">*</span></label>
+                    <input type="text" id="first-name" name="first-name" required placeholder="Customer first name">
+                </div>
+
+                <div class="form-group">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" name="last-name" placeholder="Customer last  name">
+                </div>
+
+                <div class="form-group">
+                    <label for="customer-email">Email</label>
+                    <input type="email" id="customer-email" name="customer-email"  placeholder="Customer email address">
+                </div>
+
+                <div class="form-group">
+                    <label for="customer-phone">Phone<label>
+                    <input type="text" id="customer-phone" name="customer-phone"  placeholder="Customer phone number">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit custom-button ">Update Customer Info</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of customer infomation modal -->
+
+
+<!-- Property Info  modal -->
+<div id="property-info" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div class="property-container">
+            <h2>Update Customer Property Details</h2>
+
+            <form id="property-form">             
+                <input type="text" id="property-id" hidden>
+                
+                <div class="form-group">
+                    <label for="imei_serial_no_field">IMEI/Serial No</label>
+                    <input type="text" id="imei_serial_no_field" name="imei_serial_no_field"  placeholder="Propety IMEI/Serial Number">
+                </div>
+
+                <div class="form-group">
+                    <label for="brand_field">Brand<span class="required">*</span></label>
+                    <input type="text" id="brand_field" name="brand_field" required placeholder="Property Brand">
+                </div>
+
+                <div class="form-group">
+                    <label for="model_field">Model<span class="required">*</span></label>
+                    <input type="text" id="model_field" name="model_field" required placeholder="Property  Model">
+                </div>
+
+                <div class="form-group">
+                    <label for="more_details_field">More Details<span></span></label>
+                    <input type="text" id="more_details_field" name="more_details_field" placeholder="More Detail">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit custom-button ">Update Property Info</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of Property Modal -->
+
+
+
+
+<!-- Ticket Info  modal -->
+<div id="ticket-info" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div class="ticket-container">
+            <h2>Update Ticket Information</h2>
+
+            <form id="ticket-form">             
+                               
+                <div class="form-group">
+                    <label for="problem_field">Problem<span class="required">*</span></label>
+                    <input type="text" id="problem_field" name="problem_field" required placeholder="Device Problem">
+                </div>
+
+                <div class="form-group">
+                    <label for="due_date_field">Due Date<span class="required">*</span></label>
+                    <input type="date" id="due_date_field" name="due_date_field">
+                </div>
+
+                <div class="form-group">
+                    <label for="bin_location_field">Bin Location<span class="required">*</span></label>
+                    <input type="text" id="bin_location_field" name="bin_location_field" placeholder="Bin Location">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit custom-button ">Update Ticket Info</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of Ticket Info Modal -->
+
+
+
+
+
+<!-- Page Loader Modal Area -->
+<div id="spinner" class="modal">
+    <div class="modal-content">
+        <div class="spinner-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+
+<!-- End of Page Loader Spinner -->
+</div>
+
+{% endblock %}
+{% block jsFile %}
+<!-- Link Javascript Files -->
+<script src="{% static 'js/base.js' %}"></script>
+<script src="{% static 'js/payment_calculations.js' %}"></script>
+<script src="{% static 'js/invoice_calculation.js' %}"></script>
+<script src="{% static 'js/notes.js' %}"></script>
+<script src="{% static 'js/print_functionality.js' %}"></script>
+<script src="{% static 'js/ticket_summary.js' %}"></script>
+
+{% endblock %}

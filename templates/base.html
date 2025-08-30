@@ -1,0 +1,81 @@
+{% load static %} <!-- Load static files in the template -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}<title>Home Page | Repair app</title>{% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+     <!-- Link to the CSS file -->
+     <link href="{% static 'css/base.css' %}" rel="stylesheet">
+
+     {% block cssFile %} {% endblock %} 
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
+     
+</head>
+<body>
+ <!-- Menu Button -->
+ <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+ <!-- Overlay -->
+ <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="close-btn" onclick="toggleSidebar()">×</button>
+          
+            <a  href="{% url 'logout' %}"  class="logout-btn" id="logout">Logout</a>
+            
+           
+            <a  href="javascript:void(0)" class="sidebar-buttons" onclick="getUserIdAndMakeRequest()">Tickets</a>
+         
+
+            <a href="{% url 'invoice_list' %}" class="sidebar-buttons">Invoice</a>
+         
+      
+            <a href="{% url 'inventory_listing' %}" class="sidebar-buttons" id="inventoryDropdownBtn">Inventory</a>
+           <div class="dropdown-content" id="inventoryDownContent">
+            {% comment %}
+                <a href="{% url 'inventory' %}">New Stock</a>
+                <a href="{% url 'manage_inventory' %}">Manage Inventory</a>
+                <a href="{% url 'low_stock_alerts' %}">Low Stock Check</a>
+                <a href="{% url 'barcode_scanner' %}">Barcode Search</a>
+                <a href="{% url 'expiring_items' %}">Expiring Items</a>
+                <a href="#">Suppliers</a>
+                <a href="#"></a>
+            {% endcomment %}
+            </div>
+            <a href="{% url 'create-user' %}" class="sidebar-buttons">User</a>
+
+            <a href="{% url 'dashboard' %}" class="sidebar-buttons">Dashboard</a>
+        </div>
+
+            <!-- Main Content -->
+        <div class="content">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+                
+        
+
+    </div>
+     
+</div>
+<script>
+   
+    function getUserIdAndMakeRequest(){
+        const logged_in_user = localStorage.getItem('logged_in_user_id')
+        window.location.href = `/repairs/tickets/${logged_in_user}/`
+    }
+</script>
+ {% block jsFile %}
+ <!-- Link Javascript Files -->
+ <script src="{% static 'js/base.js' %}"></script>
+
+ {% endblock %}
+
+</body>
+</html>

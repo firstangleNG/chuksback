@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block cssFile %}
+<link rel="stylesheet" href="{% static 'css/invoice_detail.css' %}">
+{% endblock cssFile %}
+{% block content %}
+
+<div class="invoice-details">
+    <p><strong>Invoice ID:</strong> <span id="invoice-id">{{ invoice.invoice }}</span></p>
+    <p><strong>Customer Name:</strong> {{ invoice.customer_name }} <button onclick="getCustomerName()">Edit</button></p>
+    <p><strong>Payment Method:</strong> {{invoice.get_payment_method_display }}
+        <span>
+    <select class="custom-select"  id="payment-method">
+        <option value="Cash">Cash</option>
+        <option value="Credit/Debit Card">Credit/Debit Card</option>
+        <option value="Paypal">Paypal</option>
+        <option value="Stripe">Stripe</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+    </select>
+        </span></p>
+    <p><strong>Payment Status:</strong> {{ invoice.payment_status }}  <span><select class="custom-select" id="payment-status"><option value="Not Paid">Not Paid</option>
+    <option value="Paid">Paid</option></select></span></p>
+    <p><strong>Created At:</strong> {{ invoice.created_at }}</p>
+
+    <h3>Items</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Service Name</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Price per Unit</th>
+                <th>Taxes (%)</th>
+                <th>Total</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices  %}
+            <tr>
+                <td>{{ invoice.service_name }}</td>
+                <td>{{ invoice.description }}</td>
+                <td>{{ invoice.quantity }}</td>
+                <td>{{ invoice.price_per_unit }}</td>
+                <td>{{ invoice.taxes }}</td>
+                <td>{{ invoice.total }}</td>
+                <td>
+                    <button id="{{ invoice.id }}" onclick="getInvoiceItemDetails(this.id)">Edit</button>
+                  </td>
+                  
+                <td><Button id="{{ invoice.id }}" onclick="deleteInvoiceItemDetails(this.id)">Delete</Button></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No items found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Summary</h3>
+    <p class="cash-container"><strong>Subtotal:</strong> <span id="subtotal">{{ subtotal }}</span></p>
+    <p class="cash-container"><strong>Total Tax:</strong> <span id="total_tax">{{ final_tax  }}</span></p>
+    <p class="cash-container"><strong>Final Amount:</strong><span id="final_amount">{{ final_amount }}</span></p>
+
+    <a href="{% url 'invoice_list' %}">< Back to Invoice List</a>
+    <button id="print-invoice" onclick="printInvoice()">Print Invoice</button>
+    <button onclick="openModal('email-invoice')">Email Invoice</button>
+
+</div>
+
+<!-- email-invoice modal -->
+<div id="email-invoice" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div class="ticket-container">
+            <h2>Email Invoice To Customer</h2>
+            <form id="email-form">    
+                {% csrf_token %}   
+
+                <div class="form-group">
+                    <label for="re-email-invoice">Invoice<span class="required">*</span></label>
+                    <input type="text" id="re-email-invoice" name="re-email-invoice"  placeholder="Invoice Number" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer_email">Email address<span class="required">*</span></label>
+                    <input type="email" id="customer_email" name="customer_email" required placeholder="Customer Email">
+                </div>
+                <!-- messages -->
+                 <p id="email-messages"></p>
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit custom-button">Re-Send Invoice</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of email-invoice Info Modal -->
+
+
+
+
+
+<!-- Page Loader Modal Area -->
+<div id="spinner" class="modal">
+    <div class="modal-content">
+        <div class="spinner-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- End of SPinner Modal -->
+
+<!-- Edit-invoice modal -->
+<div id="edit-invoice" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <h2>Edit Invoice Item</h2>
+        <form id="edit-invoice-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" id="edit-invoice-id" name="invoice_id">
+
+            <!-- Service Name and Description Group (on the same line) -->
+            <div class="form-group-group">
+                <div class="form-group">
+                    <label for="edit-service-name">Service Name<span class="required">*</span></label>
+                    <input type="text" id="edit-service-name" name="service_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-description">Description</label>
+                    <input type="text" id="edit-description" name="description" placeholder="Description">
+                </div>
+            </div>
+
+            <!-- Quantity and Price per Unit Group (on the same line) -->
+            <div class="form-group-group">
+                <div class="form-group">
+                    <label for="edit-quantity">Quantity<span class="required">*</span></label>
+                    <input type="number" id="edit-quantity" name="quantity" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-price">Price per Unit<span class="required">*</span></label>
+                    <input type="number" id="edit-price" name="price_per_unit" step="0.01" required>
+                </div>
+            </div>
+
+            <!-- Taxes (%) and Total Group (on the same line) -->
+            <div class="form-group-group">
+                <div class="form-group">
+                    <label for="edit-taxes">Taxes (%)</label>
+                    <select id="edit-taxes" name="taxes">
+                        <option value="20.0">Taxed</option>
+                        <option value="0.0">Not Taxed</option>
+                    </select>                    
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-total">Total</label>
+                    <input type="number" id="edit-total" name="edit-total" step="0.01" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit custom-button" onclick="updateInvoiceItem()">Save Changes</button>
+        </form>
+    </div>
+</div>
+<!-- End of Edit-invoice Modal -->
+
+
+<!-- Edit Customer Name Modal -->
+<div id="edit-customer-name-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <h2>Edit Customer Name</h2>
+        <form id="edit-customer-name-form" method="post">
+            {% csrf_token %}
+
+            <!-- Customer Name Field -->
+            <div class="form-group">
+                <label for="edit-customer-name">Customer Name<span class="required">*</span></label>
+                <input type="text" id="edit-customer-name" name="customer_name" required>
+            </div>
+
+            <input type="submit" class="btn-submit custom-button" value="Change Name">
+        </form>
+    </div>
+</div>
+<!-- End of Edit Customer Name Modal -->
+
+
+
+<!-- Custom Confirmation Modal -->
+<div id="deleteConfirmModal" class="delete-modal" style="display: none;">
+    <div class="delete-modal-content">
+      <div class="delete-modal-header">
+        <span class="delete-close" id="closeModal">&times;</span>
+        <h2>Confirm Delete</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this invoice item?</p>
+      </div>
+      <div class="delete-modal-footer">
+        <button id="cancelBtn" class="delete-btn delete-btn-secondary">Cancel</button>
+        <button id="confirmDeleteBtn" class="delete-btn delete-btn-danger">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock %}
+{% block jsFile %}
+<script src="{% static 'js/base.js' %}"></script>
+<script src="{% static 'js/detail_print_functionality.js' %}"></script>
+<script src="{% static 'js/invoice_detail.js'  %}"></script>
+
+{% endblock %}

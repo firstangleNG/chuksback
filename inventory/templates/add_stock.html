@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block cssFile %}
+    {% block title %}<title>Repair | Inventory</title> {% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="{% static 'css/add_stock.css' %}" rel="stylesheet">
+{% endblock %}
+  
+{% block content %}
+<div class="inventory-form-container">
+    <h1>Manage Inventory</h1>
+    <form id="inventory-form" method="POST">
+        {% csrf_token %}
+        
+        <ul>
+            {% if messages %}
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>  
+                {% endfor %}
+            {% endif %}
+        </ul>
+
+        <div class="form-row">
+            <label for="part_name">Item Name:</label>
+            <input type="text" id="part_name" name="part_name" autocomplete="off" required>
+            <ul id="suggestions" class="hidden"></ul>
+        </div>
+
+        <div class="form-row">
+            <label for="sku">SKU (Stock Keeping Unit):</label>
+            <small>A unique identifier for each item.e.g LAP-DL-512GB → Laptop, Dell, 512GB</small>
+            <input type="text" id="sku" name="sku" required>
+        </div>
+                <div class="form-row">
+            <label for="barcode">Barcode/QR Code:</label>
+            <small>For easy scanning and tracking.</small>
+            <input type="text" id="barcode" name="barcode">
+        </div>
+
+        <div class="form-row">
+            <label for="category">Category:</label>
+            <small>Classify the item under a specific category.</small>
+            <input type="text" id="category" name="category">
+        </div>
+
+        <div class="form-row">
+            <label for="supplier_name">Supplier Name:</label>
+            <small>The name of the supplier providing this item.</small>
+            <input type="text" id="supplier_name" name="supplier_name">
+        </div>
+
+        <div class="form-row">
+            <label for="cost_price">Cost Price:</label>
+            <small>The price at which the item was purchased.</small>
+            <input type="number" id="cost_price" name="cost_price" step="0.01">
+        </div>
+
+        <div class="form-row">
+            <label for="selling_price">Selling Price:</label>
+            <small>The price at which the item will be sold.</small>
+            <input type="number" id="selling_price" name="selling_price" step="0.01">
+        </div>
+
+        <div class="form-row">
+            <label for="quantity">Quantity to Add:</label>
+            <small>Specify how many units you are adding to inventory.</small>
+            <input type="number" id="quantity" name="quantity" required min="1">
+        </div>
+
+        <div class="form-row">
+            <label for="low_stock_threshold">Low Stock Threshold:</label>
+            <small>Set a minimum stock level to trigger a restock alert.</small>
+            <input type="number" id="low_stock_threshold" name="low_stock_threshold" min="1">
+        </div>
+        <div class="form-row">
+            <label for="reorder_level">Reorder Level:</label>
+            <small>A specific quantity at which new stock should be ordered.</small>
+            <input type="number" id="reorder_level" name="reorder_level" min="1">
+        </div>
+        <div class="form-row">
+            <label for="location">Location:</label>
+            <small>Specify where the item is stored (e.g., Warehouse A, Shelf B2).</small>
+            <input type="text" id="location" name="location">
+        </div>
+
+        <div class="form-row">
+            <label for="expiration_date">Expiration Date:</label>
+            <small>Applicable for perishable goods, enter the expiry date.</small>
+            <input type="date" id="expiration_date" name="expiration_date">
+        </div>
+
+        <p id="item-status" class="hidden"></p>
+
+        <button type="submit">Update Inventory</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block jsFile %}
+    <!-- <script src="{% static 'js/add_stock.js' %}"></script> -->
+{% endblock %}

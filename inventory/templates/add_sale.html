@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Record Sale</title>{% endblock %}
+{% block cssFile %}
+    <link href="{% static 'css/add_sale.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="add-sale-container">
+    <h1>Record a New Sale</h1>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="item">Select Item:</label>
+        <select name="item" required>
+            {% for item in items %}
+            <option value="{{ item.id }}">{{ item.part_name }} (Stock: {{ item.quantity_available }})</option>
+            {% endfor %}
+        </select>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" min="1" required>
+
+        <button type="submit" class="btn">Record Sale</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Repair Ticket Management</title>{% endblock %}
+
+{% block cssFile %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="{% static 'css/ticket.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="ticket-container">
+
+    <!-- Navbar -->
+    <div class="nav-container">
+        <div class="user-info">
+            <img src="https://via.placeholder.com/40" alt="User Avatar">
+            <span>John Doe</span>
+        </div>
+
+        <div class="profile-dropdown">
+            <button class="dropdown-btn">Profile ▼</button>
+            <div class="dropdown-menu">
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="heading-container">
+        <div class="heading-left">
+            <p>Repair Tickets</p>
+        </div>
+        <div class="heading-right">
+            <a href="{% url 'add_ticket' %}" class="create-ticket-btn">
+                <span class="plus-icon">+</span> Create Ticket
+            </a>
+        </div>
+    </div>
+
+   
+
+    <!-- Combined Search & Filter (Same Line) -->
+    <div class="filter-container" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <input type="text"  id="user-id" value="{{ logged_in_user.id }}" hidden>
+        <!-- Search Input -->
+        <input type="text" id="searchInput" placeholder="Search by Name or Ticket Number..." onkeyup="searchTickets()" style="flex: 2; padding: 8px;">
+
+        <!-- Status Filter -->
+        <select id="statusFilter" onchange="filterTable()" style="flex: 1; padding: 8px;">
+            <option value="">All Statuses</option>
+            {% for status, label in STATUS_CHOICES %}
+                <option value="{{ status }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Technician Filter -->
+        <select id="techFilter" onchange="filterTable()" style="flex: 1; padding: 8px;">
+            <option value="">All Technicians</option>
+            {% for tech in technicians %}
+                <option value="{{ tech.id }}">{{ tech.full_name }}</option>
+            {% endfor %}
+        </select>
+
+    </div>
+
+    <!-- Ticket Table -->
+    <table id="repairTable">
+        <thead>
+            <tr>
+                <th>Ticket ID</th>
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Model/Brand</th>
+                <th>Technician</th>
+                <th>Problem</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Last Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <tr onclick="storeCustomerAndRedirect({{ ticket.customer.id }},{{ ticket.ticket_id }},{{ ticket.invoice }})">
+                    <td>{{ ticket.ticket_id }}</td>
+                    {% ticket.invoice %}
+                    <td>{{ ticket.invoice }}</td>
+                    {% else %}
+                    <td>No invoice </td>
+                    {% endif %}
+                  
+                    <td>{{ ticket.customer.first_name }} {{ ticket.customer.last_name }}</td>
+                    <td>{{ ticket.property.brand }} {{ ticket.property.model }}</td>
+                    <td>{{ ticket.technician.full_name|default:"Unassigned" }}</td>
+                    <td>{{ ticket.problem|truncatechars:50 }}</td>
+                    <td>{{ ticket.get_status_display }}</td>
+                    <td>{{ ticket.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ ticket.updated_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="8">No tickets available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
+
+{% block jsFile %}
+    <script src="{% static 'js/ticket.js' %}"></script>
+
+    <script>
+        function storeCustomerAndRedirect(customerId, ticketId,invoice) {
+            localStorage.setItem('current_customer_id', customerId);
+            localStorage.setItem('current_ticket',ticketId)
+            localStorage.setItem('current_invoice', invoice);
+            window.location.href = `/repairs/summary/${customerId}/${ticketId}/`;
+        }
+ 
+    </script>
+{% endblock %}

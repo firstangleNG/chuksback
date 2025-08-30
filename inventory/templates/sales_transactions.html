@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Sales Transactions</title>{% endblock %}
+
+{% block cssFile %}
+    <link href="{% static 'css/sales.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="sales-container">
+    <h1>Sales Transactions</h1>
+    
+    <div class="sales-summary">
+        <div class="summary-card">
+            <h3>Total Revenue</h3>
+            <p>${{ total_revenue }}</p>
+        </div>
+        <div class="summary-card">
+            <h3>Total Sales</h3>
+            <p>{{ total_sales }}</p>
+        </div>
+    </div>
+
+    <div class="sales-list">
+        {% for sale in sales %}
+        <div class="sales-item">
+            <h3>{{ sale.item.part_name }}</h3>
+            <p><strong>Quantity Sold:</strong> {{ sale.quantity_sold }}</p>
+            <p><strong>Total Price:</strong> ${{ sale.total_price }}</p>
+            <p><strong>Date:</strong> {{ sale.sold_at }}</p>
+        </div>
+        {% empty %}
+        <p>No sales transactions available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block jsFile %}
+<!-- <script src="{% static 'js/sales.js' %}"></script> -->
+{% endblock %}

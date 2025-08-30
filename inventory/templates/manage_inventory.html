@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Manage Inventory</title>{% endblock %}
+{% block cssFile %}<link rel="stylesheet" href="{% static 'css/manage_inventory.css' %}">{% endblock %}
+
+{% block content %}
+<div class="inventory-container">
+    <h1>Manage Inventory</h1>
+    <a href="{% url 'add_item' %}" class="btn">Add New Item</a>
+    <div class="inventory-list">
+        {% for item in inventory %}
+        <div class="inventory-item">
+            <div class="item-details">
+                <h3>{{ item.part_name }}</h3>
+                <p><strong>SKU:</strong> {{ item.sku }}</p>
+                <p><strong>Quantity:</strong> {{ item.quantity_available }}</p>
+                <p><strong>Price:</strong> ${{ item.selling_price }}</p>
+            </div>
+            <div class="item-actions">
+              {% comment %}
+                <a href="{% url 'edit_item' item.id %}" class="btn">Edit</a>
+                <a href="{% url 'delete_item' item.id %}" class="btn btn-danger">Delete</a>
+              {% endcomment %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

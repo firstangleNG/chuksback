@@ -1,0 +1,181 @@
+
+
+h2, h3 {
+    color: #2c3e50;
+}
+
+form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 20px auto;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+
+#customer_name{
+    width: 50%;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #999;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #797c7b;;
+}
+
+/* Invoice Items Table */
+#invoice-items {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#invoice-items th, #invoice-items td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+#invoice-items th {
+    /* background-color: #ecf0f1; */
+    background-color: #f4f4f4;
+}
+
+#invoice-items .total {
+    font-weight: bold;
+}
+
+/* Add Item Button */
+#add-item {
+    background-color: #2ecc71;
+    margin: 10px 0;
+}
+
+#add-item:hover {
+    background-color: #27ae60;
+}
+
+/* Remove Item Button */
+.remove-item {
+    background-color: #e74c3c;
+}
+
+.remove-item:hover {
+    background-color: #c0392b;
+}
+
+/* Summary Section */
+#summary p {
+    margin: 8px 0;
+    font-size: 1.1em;
+}
+
+#summary span {
+    font-weight: bold;
+}
+
+/* Messages */
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+ul li {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+ul li.success {
+    background-color: #2ecc71;
+    color: white;
+}
+
+ul li.error {
+    background-color: #e74c3c;
+    color: white;
+}
+.cash-container{
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.payment-data-container{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+
+    #invoice-items th, #invoice-items td {
+        padding: 8px;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
+
+
+/* Print-specific styling */
+@media print {
+    body {
+        background: none;
+        color: #000;
+    }
+
+    form, button, #add-item, .remove-item {
+        display: none;
+    }
+
+    #invoice-items input {
+        border: none;
+        outline: none;
+    }
+
+    #invoice-items td {
+        text-align: left;
+    }
+
+    #invoice-items input {
+        width: auto;
+    }
+
+    #invoice-summary {
+        margin-top: 20px;
+    }
+
+    #print-invoice {
+        display: none;
+    }
+} 

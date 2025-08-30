@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block cssFile %}
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<input type="text" name="" id="disclaimer" hidden>
+<input type="email" name="" id="email" hidden>
+
+
+
+ <form method="post" id="invoice-form" action="{% url 'create_invoice' %}">
+    {% csrf_token %}
+
+    <ul>
+        {% if messages %}
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+    <p>INV-{{ invoice }}</p>
+    <!-- Ticket ID (Hidden or Input) -->
+    <input type="hidden" name="invoice"  id="invoice_no" value="{{ invoice }}">
+
+    <!-- Customer Information -->
+     <div style="display: flex;gap: 20px;"> 
+        <label for="customer_name">Customer Name<span style="color: red;">*</span>:</label>
+    <input type="text" name="customer_name" id="customer_name" required>
+    <label for="customer_name">Customer Email:</label>
+    <input type="email" name="customer_email_field" id="customer_email_field">
+     </div>
+    
+
+    <h3>Invoice Items</h3>
+    <table id="invoice-items">
+        <thead>
+            <tr>
+                <th>Service Name</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Price per Unit</th>
+                <th>Taxes (%)</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="service_name[]" required></td>
+                <td><input type="text" name="description[]"></td>
+                <td><input type="number" name="quantity[]" class="quantity" min="1" value="1" required></td>
+                <td><input type="number" name="price_per_unit[]" class="price" step="0.01" required></td>
+                <td> <select  name="tax[]" class="tax">
+                    <option value="0">Not Taxed</option>
+                    <option value="20">Taxed</option>
+                </select></td>
+                <td class="total">0.00</td>
+                <td><button type="button" class="remove-item">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Add New Item Button -->
+    <button type="button" id="add-item">Add Item</button>
+    <button type="button" id="clear-form">Clear Form</button>
+    <!-- Invoice Summary -->
+    <h3>Summary</h3>
+    <p class="cash-container">Subtotal: <span id="subtotal">0.00</span></p>
+    <p class="cash-container">Total Tax: <span id="total-tax">0.00</span></p>
+    <p class="cash-container">Final Amount: <span id="final-amount">0.00</span></p>    
+   
+    <div class="payment-data-container">
+        <div class="payment-options">
+            <h3>Payment Status</h3>
+            <select name="payment_status">
+                <option value="Not Paid">Not Paid</option>
+                <option value="Paid">Paid</option>
+            </select>
+        </div>
+     
+        <div class="payment-options">
+            <h3>Payment Made Using</h3>
+            <select name="payment_method">
+                <option value="Credit/Debit Card">Credit/Debit Card</option>
+                <option value="Paypal">PayPal</option>
+                <option value="Stripe">Stripe</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+        </div>
+             
+    </div>
+   
+
+   <!-- Submit and Print Buttons -->
+
+   <button type="submit" name="action"  value="save-and-email">Email Invoice</button>
+   <button type="submit" name="action" value="save-and-print" id="print-invoice">Print Invoice</button>
+   {% comment %}
+   <button type="submit"  id="print-invoice">Print Invoice</button>
+   {% endcomment %}
+   <button type="button" onclick="openModal('email-invoice')">Re-Send Invoice</button>
+   <a href="{% url 'invoice_list' %}" style="margin-left: 30px;">Invoices List</a>
+</form>
+
+
+<!-- email-invoice modal -->
+<div id="email-invoice" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div class="ticket-container">
+            <h2>Email Invoice To Customer</h2>
+            <form id="email-form">    
+                {% csrf_token %}   
+
+                <div class="form-group">
+                    <label for="re-email-invoice">Invoice<span class="required">*</span></label>
+                    <input type="text" id="re-email-invoice" name="re-email-invoice"  placeholder="Invoice Number" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer_email">Email address<span class="required">*</span></label>
+                    <input type="email" id="customer_email" name="customer_email" required placeholder="Customer Email">
+                </div>
+                <!-- messages -->
+                 <p id="email-messages"></p>
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit custom-button">Re-Send Invoice</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End of email-invoice Info Modal -->
+
+{% endblock %}
+
+{% block jsFile %}
+
+<script src="{% static 'js/base.js' %}"></script>
+<script src="{% static 'js/invoice.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Invoice Management</title>{% endblock %}
+
+{% block cssFile %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="{% static 'css/invoice_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="invoice-container">
+
+    <!-- Navbar -->
+    <div class="nav-container">
+        <div class="user-info">
+            <!-- <img src="https://via.placeholder.com/40" alt="User Avatar"> -->
+            <span></span>
+        </div>
+
+        <!-- <div class="profile-dropdown">
+            <button class="dropdown-btn">Profile ▼</button>
+            <div class="dropdown-menu">
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </div> -->
+    </div>
+
+    <!-- Header -->
+    <div class="heading-container">
+        <div class="heading-left">
+            <p>Invoices</p>
+        </div>
+        <div class="heading-right">
+         
+                <a href="{% url 'create_invoice' %}" class="create-invoice-btn">
+
+                <span class="plus-icon">+</span> Create Invoice
+            </a>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="filter-container" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+
+        <!-- Search Input -->
+        <input type="text" id="searchInput" placeholder="Search by Customer or Invoice ID..." onkeyup="searchInvoices()" style="flex: 2; padding: 8px;">
+
+        <!-- Payment Status Filter -->
+        <select id="statusFilter" onchange="filterTable()" style="flex: 1; padding: 8px;">
+            <option value="">All Statuses</option>
+            <option value="Not Paid">Not Paid</option>
+            <option value="Paid">Paid</option>
+        </select>
+
+        <!-- Payment Method Filter -->
+        <select id="paymentMethodFilter" onchange="filterTable()" style="flex: 1; padding: 8px;">
+            <option value="">All Payment Methods</option>
+            <option value="Debit/Creddit Card">Debit/Creddit Card</option>
+            <option value="Cash">Cash</option>
+            <option value="Paypal">PayPal</option>
+            <option value="Stripe">Stripe</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+        </select>
+
+    </div>
+
+    <!-- Invoice Table -->
+    <table id="invoiceTable">
+        <thead>
+            <tr>
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Service Name</th>
+                <th>Qty</th>
+                <th>Service P/U</th>
+                <th>Payment Method</th>
+                <th>Amount(+VAT)</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+                <tr onclick="redirectToInvoiceDetail('{{ invoice.invoice }}')">
+                    <td>{{ invoice.invoice }}</td>
+                    <td>{{ invoice.customer_name }}</td>
+                    <td>{{ invoice.service_name }}</td>
+                    <td>{{ invoice.quantity }}</td>
+                    <td>{{ invoice.price_per_unit }}</td>
+                    <td>{{ invoice.get_payment_method_display }}</td>
+                    <td>{{ invoice.total }}</td>
+                    <td>{{ invoice.payment_status }}</td>
+                    <td>{{ invoice.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <a href="{% url 'invoice_detail' invoice.invoice %}">View Details</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="7">No invoices available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
+
+{% block jsFile %}
+    <script src="{% static 'js/invoice.js' %}"></script>
+
+    <script>
+        function redirectToInvoiceDetail(invoiceId) {
+            window.location.href = `/invoicing/invoice/${invoiceId}/`;
+        }
+
+        function searchInvoices() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#invoiceTable tbody tr');
+
+            rows.forEach(row => {
+                const customer = row.cells[1].textContent.toLowerCase();
+                const invoiceId = row.cells[0].textContent.toLowerCase();
+
+                if (customer.includes(input) || invoiceId.includes(input)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function filterTable() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const paymentFilter = document.getElementById('paymentMethodFilter').value;
+            const rows = document.querySelectorAll('#invoiceTable tbody tr');
+
+            rows.forEach(row => {
+                const status = row.cells[4].textContent;
+                const paymentMethod = row.cells[2].textContent;
+
+                const statusMatch = !statusFilter || status === statusFilter;
+                const paymentMatch = !paymentFilter || paymentMethod === paymentFilter;
+
+                if (statusMatch && paymentMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+{% endblock %}

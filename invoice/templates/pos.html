@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block cssFile %}
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}">
+<style>
+
+    .invoice-container {
+        width: 100%;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+ 
+    }
+    h2, h3 {
+        text-align: center;
+        color: #333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color: #999;
+        color: white;
+    }
+    input[type="text"], input[type="number"], select {
+        width: 90%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .remove-item {
+        background: red;
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+    .invoice-summary {
+        text-align: right;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+    .pay-btn {
+        display: block;
+        width: 100%;
+        background: #28a745;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    #add-item {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        display: block;
+        margin: 10px auto;
+    }
+    #add-item:hover, .pay-btn:hover {
+        opacity: 0.8;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="invoice-container">
+    <h2 class="invoice-title">Point of Sale Invoice</h2>
+    <form method="post" id="invoice-form">
+        {% csrf_token %}
+        
+        <div class="customer-details">
+            <label for="customer_name">Customer Name:</label>
+            <input type="text" id="customer_name" name="customer_name" required>
+        </div>
+        
+        <div class="invoice-items">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service Name</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price per Unit</th>
+                        <th>Taxes (%)</th>
+                        <th>Discount (%)</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="item-list">
+                    <tr class="item-row">
+                        <td><input type="text" name="service_name[]" required></td>
+                        <td><input type="text" name="description[]" required></td>
+                        <td><input type="number" name="quantity[]" min="1" value="1" required></td>
+                        <td><input type="number" name="price[]" step="0.01" required></td>
+                        <td><input type="number" name="taxes[]" step="0.01"></td>
+                        <td><input type="number" name="discount[]" step="0.01"></td>
+                        <td class="item-total">0.00</td>
+                        <td><button type="button" class="remove-item">✖</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" id="add-item">+ Add Item</button>
+        </div>
+        
+        <div class="invoice-summary">
+            <p>Subtotal: <strong id="subtotal">0.00</strong></p>
+            <p>Taxes: <strong id="total-tax">0.00</strong></p>
+            <p>Final Amount: <strong id="final-amount">0.00</strong></p>
+        </div>
+        <div class="payment-status">
+            <h3>Payment Status</h3>
+            <label>
+                <input type="checkbox" name="payment_status" value="paid"> Not Paid
+            </label>
+        </div>
+        
+        <div class="payment-options">
+            <h3>Payment Made Using</h3>
+            <select name="payment_method">
+                <option value="credit_card">Credit/Debit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="bank_transfer">Bank Transfer</option>
+            </select>
+            <button type="submit" class="pay-btn">Generate Invoice</button>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    document.getElementById('add-item').addEventListener('click', function() {
+        let tableBody = document.getElementById('item-list');
+        let newRow = document.createElement('tr');
+        newRow.classList.add('item-row');
+        newRow.innerHTML = `
+            <td><input type="text" name="service_name[]" required></td>
+            <td><input type="text" name="description[]" required></td>
+            <td><input type="number" name="quantity[]" min="1" value="1" required></td>
+            <td><input type="number" name="price[]" step="0.01" required></td>
+            <td><input type="number" name="taxes[]" step="0.01"></td>
+            <td><input type="number" name="discount[]" step="0.01"></td>
+            <td class="item-total">0.00</td>
+            <td><button type="button" class="remove-item">✖</button></td>
+        `;
+        tableBody.appendChild(newRow);
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-item')) {
+            e.target.closest('tr').remove();
+        }
+    });
+</script>
+
+{% endblock %}

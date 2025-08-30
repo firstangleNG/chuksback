@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Supplier Management</title>{% endblock %}
+
+{% block content %}
+<div class="supplier-container">
+    <h1>Supplier Management</h1>
+
+    <!-- Success and Error Messages -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Add New Supplier Form -->
+    <form method="POST" action="{% url 'add_supplier' %}" class="supplier-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Supplier Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="contact_person">Contact Person:</label>
+            <input type="text" id="contact_person" name="contact_person">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" required>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address"></textarea>
+        </div>
+
+        <button type="submit" class="btn">Add Supplier</button>
+    </form>
+
+    <!-- Display List of Suppliers -->
+    <div class="supplier-list">
+        <h2>Existing Suppliers</h2>
+
+        {% if suppliers %}
+            <div class="supplier-grid">
+                {% for supplier in suppliers %}
+                <div class="supplier-card">
+                    <h3>{{ supplier.name }}</h3>
+                    <p><strong>Contact Person:</strong> {{ supplier.contact_person|default:"N/A" }}</p>
+                    <p><strong>Email:</strong> {{ supplier.email }}</p>
+                    <p><strong>Phone:</strong> {{ supplier.phone_number }}</p>
+                    <p><strong>Address:</strong> {{ supplier.address|default:"Not Provided" }}</p>
+                    <div class="actions">
+                        <a href="{% url 'edit_supplier' supplier.id %}" class="btn edit-btn">Edit</a>
+                        <a href="{% url 'delete_supplier' supplier.id %}" class="btn delete-btn">Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-suppliers">No suppliers available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block jsFile %}
+<!-- <script src="{% static 'js/suppliers.js' %}"></script> -->
+{% endblock %}

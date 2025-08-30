@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: chukticketingsystem-backend
+    runtime: python3
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn repair.wsgi:application"
+    envVars:
+      - key: DJANGO_ENV
+        value: production
+      - key: DEBUG
+        value: False
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DB_HOST
+        fromDatabase:
+          name: chukticketingsystem-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: chukticketingsystem-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: chukticketingsystem-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: chukticketingsystem-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: chukticketingsystem-db
+          property: password
+
+databases:
+  - name: chukticketingsystem-db
+    databaseName: chukticketingsystem
+    user: chukticketingsystem_user

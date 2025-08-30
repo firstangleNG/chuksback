@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - ComputerHubUK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+            margin: 0;
+            padding: 15px;
+            color: #000000;
+	    font-size: 12px;
+        }
+        .invoice-header {
+            /* text-align: center; */
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 5px;
+        }
+        .invoice-header-items{
+          flex: 1;
+          width: 50%;
+        }
+        img{
+          width: 30%;
+          height: 40px;
+        }
+        .invoice-header h1 {
+            color: #000000;
+            margin: 0;
+            font-size: 16px;
+        }
+        .invoice-header p {
+            margin: 2px 0;
+            font-size: 10px;
+        }
+	.invoice-details {
+           width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 10px;
+            caption-side: 30px;
+        }
+        .invoice-detail-single{
+          flex:1;
+          width: 30%;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+       
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .invoice-table th {
+            background-color: #f2f2f2;
+        }
+        .totals {
+            text-align: right;
+            margin-bottom: 15px;
+            font-size: 10px;
+            padding-right: 5px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 9px;
+            border-top: 1px solid #ddd;
+            padding-top: 5px;
+        }
+        .disclaimer {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 8px;
+        }
+        .small-text {
+        font-size: 9px;
+        font-weight: bold;
+      }
+          ul {
+            padding-left: 15px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-header">
+        <div class="invoice-header-items">
+          <img src="https://chukticketingsystem.com/static/images/computer_hub_new.jpeg" alt="Logo"><br>
+        </div>
+         <div class="invoice-header-items">
+          <span id="company-name">Sales Invoice<br>
+            <span class="small-text">info@computerhubuk.com</span>
+        </div>
+          
+    </div>
+
+<div class="disclaimer">
+            <p><strong>Disclaimer:</strong> <br/> When replacing faulty motherboard of your computer or laptop, please be aware that if BitLocker encryption is enabled on your device,<br/> you may need to know your BitLocker recovery key. We are not responsible if you do not have or cannot provide your BitLocker recovery key.<br/>
+            Thank you for your understanding.</p>
+        </div>
+    </div>
+
+    <div class="invoice-details">
+        <div class="invoice-detail-single">
+            <p><strong>Bill To:</strong> {{ invoices.invoices.0.customer_name }} <br/>
+            <!-- <strong>Address:</strong> 123 Customer Lane, London, UK <br/> -->
+            <strong>Email:</strong> {{  invoices.email }}</p>
+        </div>
+      <div class="invoice-detail-single">
+          <p><strong>Sales Technician:</strong> Mr. Williams<br/>
+          <strong>Contact:</strong> info@computerhubuk.com | +441793354694/07501241137</p>
+      </div>
+      <div class="invoice-detail-single">
+          <p><strong>Invoice No:</strong> {{ invoices.invoices.0.invoice }}</p>
+          <p><strong>Date:</strong> {{ invoices.invoices.0.created_at }}</p>           
+      </div>
+    </div>
+    <p>VAT Number : 353 9011 12</p>
+    <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Tax</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if invoices %}
+          {% for invoice_item in invoices.invoices %}
+           <tr>
+             <td>{{ forloop.counter }}</td>
+             <td>
+               <strong>{{ invoice_item.service_name }}</strong><br>
+               {{ invoice_item.description }}
+             </td>
+             <td>{{ invoice_item.quantity }}</td>
+             <td>£{{ invoice_item.price_per_unit }}</td>
+             <td>£{{ invoice_item.tax_amount }}</td>
+             <td>£{{ invoice_item.total_price }}</td>
+           </tr>
+         {% endfor %}
+       {% else %}
+         <tr>
+           <td colspan="5" style="text-align: center;">No items found.</td>
+         </tr>
+       {% endif %}
+ 
+        </tbody>
+    </table>
+
+    <div class="totals">
+      <p><strong>Total: {{ invoices.subtotal }}</strong></p>
+      <p><strong>{{ invoices.tax_statement  }} : {{ invoices.total_tax }}</strong></p>
+      <p><strong>Grand Total: {{ invoices.grand_total  }}</strong></p>
+      <p><strong>Payment Method: {{ invoices.invoices.0.payment_method }}</strong></p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Bank Details:</strong> Bank: Metro Bank; SC: 23-05-80; AC: 45688144
+    </div>
+
+        <p><strong>Terms & Conditions:</strong></p>
+        <ul class="small-text">
+            <li><strong>Ownership of Goods:</strong> All items left for repair shall remain the property of Computer Hub UK Limited until full payment is received.
+            <li><strong>Damages and Shortages:</strong> Any damages or shortages of items sold or repaired must be reported to CHUK either at the time of delivery or within 24 hours of receiving the service.
+	    <li><strong>Refunds and exchanges:</strong> We do not offer refunds for sold items, but we do allow exchanges for items of equal value in our store or issue store credit notes that can be used for future purchases or repairs.
+            <li><strong>Book-in Fee:</strong> The book-in fee is non-refundable if you choose not to proceed with the repair; otherwise, it will go towards the cost of repairs.
+             <li><strong>Shipping Responsibility:</strong> We have no control over shipping and cannot be held responsible for delays caused by external factors such as strikes, natural disasters, or supplier shortages.
+            <li><strong>Estimates:</strong> When we provide you with an estimate, it signifies the receipt of your item(s) for repair. Please note that repair timelines may depend on the response time from third-party parts suppliers.
+            <li><strong>Additional Information:</strong> Kindly refer to the "Notes" section of the invoice for specific details regarding the type of repair performed.
+            <li><strong>Pricing and Exchange Rates:</strong> Prices are valid for the day the invoice was issued, and we do not have control over exchange rates and fluctuations.
+        </ul>
+</body>
+</html>

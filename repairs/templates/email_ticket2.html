@@ -1,0 +1,306 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      margin: 40px;
+      color: #000;
+    }
+    .header, .footer {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+.heading {
+      width: 100%;
+  display: flex;
+  justify-content: space-between;  
+  align-items: center; 
+}
+
+.invoice-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticket-person {
+  display: flex;
+  flex-direction: column; /* Stacks the invoice and sales info vertically */
+  align-items: flex-end;  /* Aligns items to the right */
+}
+
+    img{
+        width: 40px;
+        height: 40px;
+    }
+    /* .invoice-info {
+      width: 50%;
+      padding: 5px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    } */
+    .logo {
+      text-align: left;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .info-block {
+      text-align: right;
+      font-size: 12px;
+    }
+    #company-name{
+      font-family: 'Great Vibes', cursive;
+    }
+    .disclaimer{
+      width: 60%;
+      padding: 5px;
+      word-break: break-all;
+      font-size: 11px;
+    }
+    .info-flex {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+    .section {
+      width: 50%;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section h3 {
+      color: #444;
+    }
+
+    .info p {
+    
+      font-size: 14px;
+    }
+
+    .info strong {
+      color: #555;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 2px solid #d1d2cd;
+    }
+    th, td {
+      padding: 6px;
+      text-align: left;
+      font-size: 12px;
+    }
+    .no-border {
+      border: none;
+    }
+    .terms {
+      font-size: 10px;
+      margin-top: 30px;
+    }
+    .bank-details {
+      margin-bottom: 10px;
+      font-size: 10px;
+    }
+    .small-text {
+      font-size: 10px;
+      font-weight: bold;
+    }
+    .url {
+      font-size: 10px;
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <p>Repairs Ticket</p>
+  <div class="heading">
+    <div class="invoice-info" style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+      
+      <!-- Logo Section -->
+      <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://firststore.codemeduck.com/static/images/computer_hub_uk.png" alt="Logo" style="margin-bottom: 1px; width: 50px; height: auto;">
+        <div>
+          <span id="company-name">Computer Hub UK<br>United Kingdom</span><br>
+          <span class="small-text">info@computerhubuk.com</span>
+        </div>
+      </div>
+  
+      <!-- Invoice and Sales Info Section -->
+       {%  comment %}
+      <div class="ticket-person" style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+        <p><strong>Invoice #1234</strong></p>
+        <p><strong>Sales Person #1234</strong></p>
+      </div>
+      {% endcomment %}
+    </div>
+  </div>
+  <div class="disclaimer">
+    <p><strong>*Disclaimer*</strong><br>
+      <strong>When replacing faulty motherboard of your computer or laptop, please be aware that if BitLocker encryption is enabled on your device, you may need to know your BitLocker recovery key. We are not responsible if you do not have or cannot provide your BitLocker recovery key.<br>
+      Thank you for your understanding.
+      </p>
+    </strong>
+  </div>
+ 
+
+
+  <div class="info-flex">
+    <!-- Customer Info Section -->
+    <div class="section customer-info">
+      <h3>Customer Information</h3>
+      <div class="info">
+        <p><strong>Name:</strong> {{ customer.name }}</p>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+        <p><strong>Phone:</strong> {{ customer.phone }}</p>
+      </div>      
+      <div class="info">
+        <h3>Property Info</h3>
+        <p><strong>IMEI/Serial No.:</strong> {{ device_proper.imei_serial }}</p>
+        <p><strong>Brand:</strong> {{ device_proper.brand }}</p>
+        <p><strong>Model:</strong> {{ device_proper.model }}</p>
+        <p><strong>More Details:</strong> {{ device_proper.details|default:"None Provided" }}</p>
+      </div>
+    </div>
+  
+    <!-- Ticket Info Section -->
+    <div class="section ticket-info">
+      <h3>Ticket Information</h3>
+      <div class="info">
+        <p><strong>Ticket ID:</strong> {{ ticket.id }}</p>
+        <p><strong>Problem:</strong> {{ ticket.problem }}</p>
+        <p><strong>Due Date:</strong> {{ ticket.due_date }}</p>
+        <p><strong>Bin Location:</strong> {{ ticket.bin_location }}</p>
+        <p><strong>Technician:</strong> {{ ticket.technician|default:"Not Assigned" }}</p>
+        <p><strong>Salesman:</strong> {{ ticket.salesman|default:"Not Assigned" }}</p>
+        <p><strong>Repair Status:</strong> {{ ticket.status }}</p>
+      </div>
+    </div>
+  
+  </div>
+  
+  <p>VAT Number : 353 9011 12</p>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Tax</th>
+        <th>Total</th>
+      </tr>
+    </thead>   
+    <tbody>
+      {% if invoices %}
+         {% for invoice_item in invoices.invoices %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <strong>{{ invoice_item.service_name }}</strong><br>
+              {{ invoice_item.description }}
+            </td>
+            <td>{{ invoice_item.quantity }}</td>
+            <td>£{{ invoice_item.price_per_unit }}</td>
+            <td>£{{ invoice_item.tax_amount }}</td>
+            <td>£{{ invoice_item.total_price }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="5" style="text-align: center;">No items found.</td>
+        </tr>
+      {% endif %}
+
+      <!-- Totals -->
+      <tr>
+        <td colspan="5" class="no-border" style="text-align:right;"><strong>Total:</strong></td>
+        <td class="format-number">£{{ payment_details.total_amount }}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="no-border" style="text-align:right;"><strong>(0% Inclusive):</strong></td>
+        <td class="format-number">£{{  payment_details.total_tax }}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="no-border" style="text-align:right;"><strong>Grand Total:</strong></td>
+        <td class="format-number">£{{ payment_details.grand_total }}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="no-border" style="text-align:right;"><strong>Amount Paid:</strong></td>
+        <td class="format-number">£{{ payment_details.total_paid }}</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="no-border" style="text-align:right;"><strong>Amount Due:</strong></td>
+        <td class="format-number">£{{ payment_details.amount_due }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="terms">
+    <div class="bank-details">
+      <strong>Our Bank Details:</strong> Metro Bank; SC: 23-05-80; AC: 45688144
+    </div>
+
+    <p>Terms and Conditions</p>
+    <ol class="small-text">
+          <li><strong>**Ownership of Goods**</strong>
+              <p>All items left for repair shall remain the property of Computer Hub UK Limited until full payment is received.</p>
+          </li>
+          <li><strong>**Damages and Shortages**</strong>
+              <p>Any damages or shortages of items sold or repaired must be reported to CHUK either at the time of delivery or within 24 hours of receiving the service.</p>
+          </li>
+          <li><strong>**Refunds and Exchanges**</strong>
+              <p>We do not offer refunds for sold items, but we do allow exchanges for items of equal value in our store or issue store credit notes that can be used for future purchases or repairs.</p>
+          </li>
+          <li><strong>**Book-in Fee**</strong>
+              <p>The book-in fee is non-refundable if you choose not to proceed with the repair; otherwise, it will go towards the cost of repairs.</p>
+          </li>
+          <li><strong>**Shipping Responsibility**</strong>
+              <p>We have no control over shipping and cannot be held responsible for delays caused by external factors such as strikes, natural disasters, or supplier shortages.</p>
+          </li>
+          <li><strong>**Estimates**</strong>
+              <p>When we provide you with an estimate, it signifies the receipt of your item(s) for repair. Please note that repair timelines may depend on the response time from third-party parts suppliers.</p>
+          </li>
+          <li><strong>**Additional Information**</strong>
+              <p>Kindly refer to the "Notes" section of the invoice for specific details regarding the type of repair performed.</p>
+          </li>
+          <li><strong>**Pricing and Exchange Rates**</strong>
+              <p>Prices are valid for the day the invoice was issued, and we do not have control over exchange rates and fluctuations.</p>
+          </li>
+      </ol>
+
+  </div>
+
+  <div class="url">
+    www.computerhubuk.com
+  </div>
+
+  <script src="{% static 'js/email-ticke.js' %}"></script>
+
+
+</body>
+</html>

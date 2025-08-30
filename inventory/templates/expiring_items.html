@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Expiring Items</title>{% endblock %}
+
+{% block content %}
+<div class="expiring-items-container">
+    <h1>Expiring Items</h1>
+    
+    {% if expiring_items %}
+        <div class="expiring-list">
+            {% for item in expiring_items %}
+            <div class="expiring-item">
+                <h3>{{ item.part_name }}</h3>
+                <p><strong>SKU:</strong> {{ item.sku }}</p>
+                <p><strong>Expiration Date:</strong> {{ item.expiration_date }}</p>
+                <p class="expiring-warning">Expires Soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-expiring-items">✅ No items are expiring soon.</p>
+    {% endif %}
+</div>
+{% endblock %}

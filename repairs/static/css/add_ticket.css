@@ -1,0 +1,286 @@
+/* body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+} */
+
+.ticket-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.new-ticket-container {
+    background: white;
+    padding: 20px;
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* .form-group {
+    margin-bottom: 15px;
+} */
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+
+label {
+    font-weight: bold;
+    display: block;
+}
+
+label span {
+    color: red;
+}
+
+input {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-top: 1px;
+   border-color: #999;
+   outline-color: #999;;
+    border-radius: 4px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.row input {
+    flex: 1;
+}
+
+.btn {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn:hover {
+    background-color: darkblue;
+}
+
+.btn-save,.btn-new {
+    background-color: #00b300;
+    color: white;
+    border: none; 
+    margin-top: 10px; 
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-save:hover,.btn-new:hover{
+    background-color: #027502;
+}
+
+
+
+.btn-cancel {
+    text-decoration: none;
+    background-color: #999;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.btn-cancel:hover{
+    background-color: #777;
+}
+
+/*Customer devices styling  */
+.customer-devices{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.customer-devices select,
+.customer-devices input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+.customer-devices-select,.propert-select{
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+
+/* End of customer devices */
+
+
+/* problems Styling */
+.problems {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* Dropdown and Input Field */
+.problems select,
+.problems input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Button */
+.problems .btn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.problems .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Smooth Transition Between Elements */
+.problems select,
+.problems input {
+    display: block;
+}
+
+.problems input {
+    display: none; /* Initially hidden */
+}
+
+
+/* Adjust layout for smaller screens */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+}
+
+
+
+/* css for Customer  name container styling */
+/* Main container: Stack elements vertically */
+.customer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Small gap between input/button and dropdown */
+}
+
+/* Flex container for input + button */
+.input-button-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between input and button */
+    width: 100%;
+}
+
+/* Make input take up full space */
+.input-button-group input {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Prevent button from breaking to a new line */
+.btn-save {
+    white-space: nowrap; /* Ensures text doesn't wrap */
+    flex-shrink: 0; /* Prevents button from shrinking */
+}
+
+/* Dropdown container (below input-button-group) */
+.dropdown-container {
+    display: none;
+    position: relative;
+    width: 100%;
+    margin-top: -7px;
+   
+}
+
+/* Dropdown styles */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 83%;
+    background: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Dropdown items */
+.dropdown-menu ul li {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-menu ul li:hover {
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+/* Show dropdown when active */
+.show {
+    display: block;
+}

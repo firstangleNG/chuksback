@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>Repair Ticket Management</title>{% endblock %}
+{% block cssFile %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="{% static 'css/add_ticket.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="ticket-container">
+    <div class="new-ticket-container">
+        <h1 style="margin-bottom: 10px;">New Repair Ticket</h1>
+    <!-- <form action="" method="post"> -->
+        {% csrf_token %}
+        <p id="repair-ticket-errors"></p>
+        <div class="customer-container">
+            <!-- Input & Button grouped together -->
+            <div class="input-button-group">
+                <input type="text" id="customer-search" placeholder="Search Customers" onkeyup="searchCustomers()">
+                <button class="btn-save" onclick="openModal('new-user')">
+                    <span class="plus-icon">+</span> New
+                </button>
+            </div>
+            <input type="text" id="customer-id" hidden> 
+            <!-- Dropdown container -->
+            <div class="dropdown-container" id="results-parent">
+                <div class="dropdown-menu" id="customer-list">
+                    <!-- Name will dynamically come here -->
+                    <ul id="customers-names-list">
+                       
+                    </ul>
+                </div>
+            </div>
+        </div>
+       
+      
+        <div class="form-group">
+            <label>Customer Devices<span>*</span></label>
+            <div class="problems"><!--Sticking to the problems css -->
+               
+                <select id="customerDeviceDropdown">
+                    {% for property in properties %}
+                        <option value="{{ property.id }}">{{ property.model }} {{ property.brand }} {{ property.imei_serial_no }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Hidden input to store the selected option's ID -->
+                    <input type="text" id="property-id" hidden>   
+              
+                <input type="text" id="deviceField" placeholder="Enter Device Brand">
+           
+                <button class="btn-save" onclick="openModal('device-property')"><span class="plus-icon">+</span>New</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Due Date</label>
+            <input type="date">
+        </div>
+
+       
+        <!-- <div class="form-group">
+            <label>Time</label>
+            <input type="time" id="dueTime">
+        </div> -->
+
+        <div class="form-group">
+            <label>Problems<span>*</span></label>
+            <div class="problems">
+                <!-- Dropdown (default visible) -->
+                <select id="problemsDropDown">
+                </select>
+                <!-- Text Input (default hidden) -->
+                <input type="text" id="problemsInput" placeholder="Enter Device">
+                <!-- openModal('device-property')   toggleCustomerDeviceInput -->
+                <button class="btn-save" onclick="toggleDropdowInputFields('problemsDropDown','problemsInput')"><span class="plus-icon">+</span>New</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Bin Location</label>
+            <input type="text" placeholder="Enter Bin Location (The Shelf where the Device will be stored.)">
+        </div>
+        <button type="submit" class="btn-cancel">Cancel</button>
+        <button type="submit" class="btn-save" onclick="createProperty()">Create</button>
+    <!-- </form> -->
+    </div>
+</div>
+
+
+<!-- New Ticket User Creation Modal -->
+<!-- Modal -->
+<div id="new-user" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <h2>New Customer Information</h2>
+        <form id="new-user-form" method="post">
+            {% csrf_token %}
+            <p id="new-user-messages"></p> <!-- For displaying validation errors -->
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name<span>*</span></label>
+                    <input type="text" id="firstName" placeholder="Enter First Name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" placeholder="Enter Last Name">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" placeholder="Enter Phone Number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="alt-phone">Secondary Phone</label>
+                    <input type="tel" id="alt-phone" placeholder="Enter Alternative Number">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter Email Address">
+                </div>
+                
+                <div class="form-group">
+                    <label for="fax">Fax</label>
+                    <input type="text" id="fax" placeholder="Enter Fax Number">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="Enter Address">
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" placeholder="Enter Company Name">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-new">Save</button>
+        </form>
+    </div>
+</div>
+
+<!-- End of New Ticket User Creation Modal -->
+
+
+    <!-- Device Property Modal -->
+<div id="device-property" class="modal">
+    <div class="modal-content">
+    <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+    <div class="form-container">
+        <!-- <form>
+            {% csrf_token %} -->
+            <p id="device-property-modal-errors"></p>
+            <h2 style="margin-bottom: 15px;">Customer Device Infomation</h2>
+            <div class="form-group">
+                <label for="imei">IMEI/Serial No.</label>
+                <input type="text" id="imei_serial_no" name="imei" placeholder="Enter IMEI or Serial No." required>
+            </div>
+
+            
+<!--     
+            <div class="form-group">
+                <label for="brand">Brand <span class="required">*</span></label>
+                <select id="brand" name="brand" class="propert-select" required>
+                </select>
+                <button class="btn-save" onclick="toggleDropdowInputFields('problemsDropDown','problemsInput')"><span class="plus-icon">+</span>New</button>
+            </div>
+     -->
+            
+    
+        <div class="form-group">
+            <label>Brand<span>*</span></label>
+            <div class="problems"><!--Sticking to the problems css -->
+               
+                <select id="brandDropDown">
+                      {% for property in properties %}
+                        <option>{{ property.brand }}</li>
+                     {% endfor %}
+                    </select>
+                <input type="text" id="brandInput" placeholder="Enter Device Brand">
+                <button class="btn-save" onclick="toggleDropdowInputFields('brandDropDown','brandInput')"><span class="plus-icon">+</span>New</button>
+            </div>
+        </div>
+    
+        
+
+        <div class="form-group">
+            <label>Model<span>*</span></label>
+            <div class="problems"><!--Sticking to the problems css -->
+               
+                <select id="modelDropDown">
+                      {% for property in properties %}
+                        <option>{{ property.model }}</li>
+                     {% endfor %}
+                    </select>
+                <input type="text" id="modelInput" placeholder="Enter Model Name">
+                <button class="btn-save" onclick="toggleDropdowInputFields('modelDropDown','modelInput')"><span class="plus-icon">+</span>New</button>
+            </div>
+        </div>
+            <!-- <div class="form-group">
+                <label for="model">Model <span class="required">*</span></label>
+                <input type="text" id="model" name="model" placeholder="Enter Model Name" required>
+            </div>
+     -->
+            <div class="form-group">
+                <label for="details">More Details</label>
+                <textarea id="more_detail" name="more_detail" rows="4" placeholder="Enter additional details"></textarea>
+            </div>
+    
+            <button type="submit" class="btn-save" onclick="createProperty()">Submit</button>
+        <!-- </form> -->
+    </div>
+ </div>
+ </div>
+   
+    <!-- End of Device Property Modal -->
+{% endblock %}
+{% block jsFile %}
+<script src="{% static 'js/base.js' %}"></script>
+<script src="{% static 'js/add_ticket.js' %}"></script>
+{% endblock %}

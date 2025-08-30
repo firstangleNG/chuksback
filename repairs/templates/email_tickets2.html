@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repair Ticket</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 5px;
+    }
+
+    .main-container {
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(82, 81, 81, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .data-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(82, 81, 81, 0.1);
+      margin-bottom: 5px;
+    }
+
+    .alert-box {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      color: #856404;
+      font-size: 14px;
+    }
+
+    .info-flex {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .section {
+      flex: 1;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section h3 {
+      color: #444;
+      border-bottom: 2px solid #eee;
+    }
+
+    .info p {
+      margin: 2px 0;
+      font-size: 14px;
+    }
+
+    .info strong {
+      color: #555;
+    }
+    .payment-history{
+        width: 100%;
+        font-size: 14px;
+        font-weight: bolder;
+        padding-left: 20px;
+       }
+    .terms-header {
+      font-size: 14px;
+      margin-bottom: 1px;
+      color: #333;
+      padding-left: 20px;
+    }
+
+    .terms-condition {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .terms-condition ol {
+      padding-left: 20px;
+    }
+
+    .terms-condition li {
+      margin-bottom: 5px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="main-container">
+    <h2>Computer Hub United Kingdom</h2>
+
+    <div class="data-container">
+      <div class="alert-box">
+        When replacing a faulty motherboard of your computer or laptop, please
+        be aware that if BitLocker encryption is enabled on your device, 
+        you may need to know your BitLocker recovery key or provide us with the 
+        necessary details to allow us to boot your computer to Windows. We want to 
+        emphasize that
+        we are not responsible if you do not have or cannot provide your BitLocker
+         recovery key.
+        Thank you for your understanding.
+      </div>
+
+      <!-- Flex Row for Customer and Ticket Info -->
+      <div class="info-flex">
+        <!-- Customer Info Section -->
+        <div class="section customer-info">
+          <h3>Customer Information</h3>
+          <div class="info">
+            <p><strong>Name:</strong> {{ customer.name }}</p>
+            <p><strong>Email:</strong> {{ customer.email }}</p>
+            <p><strong>Phone:</strong> {{ customer.phone }}</p>
+          </div>
+
+          <h3>Property Info</h3>
+          <div class="info">
+            <p><strong>IMEI/Serial No.:</strong> {{ device_proper.imei_serial }}</p>
+            <p><strong>Brand:</strong> {{ device_proper.brand }}</p>
+            <p><strong>Model:</strong> {{ device_proper.model }}</p>
+            <p><strong>More Details:</strong> {{ device_proper.details|default:"None Provided" }}</p>
+          </div>
+        </div>
+
+        <!-- Ticket Info Section -->
+        <div class="section ticket-info">
+          <h3>Ticket Information</h3>
+          <div class="info">
+            <p><strong>Ticket ID:</strong> {{ ticket.id }}</p>
+            <p><strong>Problem:</strong> {{ ticket.problem }}</p>
+            <p><strong>Due Date:</strong> {{ ticket.due_date }}</p>
+            <p><strong>Bin Location:</strong> {{ ticket.bin_location }}</p>
+            <p><strong>Technician:</strong> {{ ticket.technician|default:"Not Assigned" }}</p>
+            <p><strong>Salesman:</strong> {{ ticket.salesman|default:"Not Assigned" }}</p>
+            <p><strong>Repair Status:</strong> {{ ticket.status }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="payment-history">  
+        <p class="amounts"><strong>Total Amount:</strong>&pound;{{  payment_details.total_amount|default:'0.00' }}</p>
+        <p class="amounts"><strong>Total Tax:</strong>&pound;{{  payment_details.total_tax|default:'0.00' }}</p>
+        <p class="amounts"><strong>Total Paid:</strong>&pound;{{  payment_details.total_paid|default:'0.00' }}</p>
+    </div>
+    <p class="terms-header"><strong>Terms and Conditions:</strong></p>
+
+    <div class="terms-condition">
+      <ol>
+        <li><strong>Ownership of Goods</strong>
+          <p>All items left for repair shall remain the property of Computer Hub UK Limited until full payment is received.</p>
+        </li>
+        <li><strong>Damages and Shortages</strong>
+          <p>Any damages or shortages of items sold or repaired must be reported to CHUK either at the time of delivery or within 24 hours of receiving the service.</p>
+        </li>
+        <li><strong>Refunds and Exchanges</strong>
+          <p>We do not offer refunds for sold items, but we do allow exchanges for items of equal value in our store or issue store credit notes that can be used for future purchases or repairs.</p>
+        </li>
+        <li><strong>Book-in Fee</strong>
+          <p>The book-in fee is non-refundable if you choose not to proceed with the repair; otherwise, it will go towards the cost of repairs.</p>
+        </li>
+        <li><strong>Shipping Responsibility</strong>
+          <p>We have no control over shipping and cannot be held responsible for delays caused by external factors such as strikes, natural disasters, or supplier shortages.</p>
+        </li>
+        <li><strong>Repair Estimates</strong>
+          <p>When we provide you with an estimate, it signifies the receipt of your item(s) for repair. Please note that repair timelines may depend on the response time from third-party parts suppliers.</p>
+        </li>
+        <li><strong>Additional Information</strong>
+          <p>Kindly refer to the "Notes" section of the invoice for specific details regarding the type of repair performed.</p>
+        </li>
+        <li><strong>Pricing and Exchange Rates</strong>
+          <p>Prices are valid for the day the invoice was issued, and we do not have control over exchange rates and fluctuations.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>

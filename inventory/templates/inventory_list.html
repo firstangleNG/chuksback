@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Inventory Management</title>{% endblock %}
+
+{% block cssFile %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="{% static 'css/listing.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="inventory-container">
+
+    <!-- Navbar -->
+    <div class="nav-container">
+        <div class="user-info">
+            <span id="logged_in_user_full_name"></span>
+        </div>
+
+        <div class="profile-dropdown">
+            <button class="dropdown-btn">Profile ▼</button>
+            <div class="dropdown-menu">
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="heading-container">
+        <div class="heading-left">
+            <p>Inventory</p>
+        </div>
+        <div class="heading-right">
+          
+            <!-- class="create-inventory-btn" -->
+            <button class="create-ticket-btn" onclick="openModal('inventory-modal')">
+                <span class="plus-icon">+</span> Add Item
+            </button>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="filter-container">
+        <input type="text" id="searchInput" placeholder="Search by Part Name or SKU..." onkeyup="filterInventory()">
+
+        <select id="categoryFilter" onchange="filterInventory()">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="supplierFilter" onchange="filterInventory()">
+            <option value="">All Suppliers</option>
+            {% for supplier in suppliers %}
+                <option value="{{ supplier }}">{{ supplier }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Inventory Table -->
+    <table id="inventoryTable">
+        <thead>
+            <tr>
+                <th>Part Name</th>
+                <th>SKU</th>
+                <th>Barcode</th>
+                <th>Category</th>
+                <th>Supplier</th>
+                <th>Cost Price</th>
+                <th>Selling Price</th>
+                <th>Quantity Available</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory_items %}
+                <tr onclick="redirectToInventoryDetail('{{ item.sku }}')">
+                    <td>{{ item.part_name }}</td>
+                    <td>{{ item.sku }}</td>
+                    <td>{{ item.barcode|default:'N/A' }}</td>
+                    <td>{{ item.category|default:'Uncategorized' }}</td>
+                    <td>{{ item.supplier_name|default:'Unknown' }}</td>
+                    <td>{{ item.cost_price|default:'0.00' }}</td>
+                    <td>{{ item.selling_price|default:'0.00' }}</td>
+                    <td>{{ item.quantity_available }}</td>
+                    <td>{{ item.location|default:'N/A' }}</td>
+                    {% comment %}
+                    <td><a href="{% url 'inventory_detail' item.sku %}">View Details</a></td>
+                    {% endcomment %}
+                </tr>
+            {% empty %}
+                <tr><td colspan="10">No inventory items available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<!-- New Inventory Modal -->
+<!-- Inventory Modal -->
+<div id="inventory-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <h2 style="margin-bottom: 10px;">Update Inventory</h2>
+
+        <form id="inventory-form" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="part_name">Item Name:</label>
+                <input type="text" id="part_name" name="part_name" autocomplete="off" required>
+                <ul id="suggestions" class="hidden"></ul>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" >
+                    <label for="sku">SKU (Stock Keeping Unit):</label>
+                    <small>A unique identifier for each item (e.g., LAP-DL-512GB).</small>
+                    <input type="text" id="sku" name="sku" required>
+                </div>
+                <div class="form-group" >
+                    <label for="barcode">Barcode/QR Code:</label>
+                    <small>For easy scanning and tracking.</small>
+                    <input type="text" id="barcode" name="barcode">
+                </div>
+            </div>
+            <div class="form-row" >
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <small>Classify the item under a specific category.</small>
+                    <input type="text" id="category" name="category">
+                </div>
+                <div class="form-group">
+                    <label for="supplier_name">Supplier Name:</label>
+                    <small>The name of the supplier providing this item.</small>
+                    <input type="text" id="supplier_name" name="supplier_name">
+                </div>
+            </div>
+
+            <div  class="form-row">
+                <div class="form-group" >
+                    <label for="cost_price">Cost Price:</label>
+                    <small>The price at which the item was purchased.</small>
+                    <input type="number" id="cost_price" name="cost_price" step="0.01">
+                </div>
+                <div class="form-group" >
+                    <label for="selling_price">Selling Price:</label>
+                    <small>The price at which the item will be sold.</small>
+                    <input type="number" id="selling_price" name="selling_price" step="0.01">
+                </div>
+            </div>
+
+            <div class="form-row" >
+                <div class="form-group">
+                    <label for="quantity">Quantity to Add:</label>
+                    <small>Specify how many units you are adding to inventory.</small>
+                    <input type="number" id="quantity" name="quantity" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="low_stock_threshold">Low Stock Threshold:</label>
+                    <small>Set a minimum stock level to trigger a restock alert.</small>
+                    <input type="number" id="low_stock_threshold" name="low_stock_threshold" min="1">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="reorder_level">Reorder Level:</label>
+                    <small>A specific quantity at which new stock should be ordered.</small>
+                    <input type="number" id="reorder_level" name="reorder_level" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="location">Location:</label>
+                    <small>Specify where the item is stored (e.g., Warehouse A, Shelf B2).</small>
+                    <input type="text" id="location" name="location">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="expiration_date">Expiration Date:</label>
+                <small>Applicable for perishable goods, enter the expiry date.</small>
+                <input type="date" id="expiration_date" name="expiration_date">
+            </div>
+
+            <p id="item-status" class="hidden"></p>
+
+            <button type="submit" class="submit-btn">Update Inventory</button>
+        </form>
+    </div>
+</div>
+
+<style>
+
+</style>
+
+
+<!-- End of new Inventory Nodal -->
+
+{% endblock %}
+
+{% block jsFile %}
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/new_stock.js' %}"></script>
+    <script>
+        function redirectToInventoryDetail(sku) {
+            window.location.href = `/inventory/${sku}/`;
+        }
+
+        function filterInventory() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value.toLowerCase();
+            const supplierFilter = document.getElementById('supplierFilter').value.toLowerCase();
+            const rows = document.querySelectorAll('#inventoryTable tbody tr');
+
+            rows.forEach(row => {
+                const partName = row.cells[0].textContent.toLowerCase();
+                const sku = row.cells[1].textContent.toLowerCase();
+                const category = row.cells[3].textContent.toLowerCase();
+                const supplier = row.cells[4].textContent.toLowerCase();
+
+                const matchesSearch = !searchInput || partName.includes(searchInput) || sku.includes(searchInput);
+                const matchesCategory = !categoryFilter || category === categoryFilter;
+                const matchesSupplier = !supplierFilter || supplier === supplierFilter;
+
+                if (matchesSearch && matchesCategory && matchesSupplier) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        document.addEventListener("DOMContentLoaded",()=>{
+            const logged_in_user_name_displayer = document.getElementById("logged_in_user_full_name")
+            logged_in_user_name_displayer.textContent = localStorage.getItem("logged_in_user_full_name")
+
+        })
+    </script>
+{% endblock %}

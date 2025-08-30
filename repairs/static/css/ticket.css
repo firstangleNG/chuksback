@@ -1,0 +1,293 @@
+.ticket-container {
+    background-color: white;
+    border-radius: 8px;
+    /* padding: 20px; */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* Navbar styling */
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: hsl(0, 9%, 98%);
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.search-box input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color:#000;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background: #f0f0f0;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+/* Navbar style end */
+
+
+/* Heading Styling */
+.heading-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+  }
+  
+  .heading-left p {
+    margin: 0;
+    font-weight: bolder;
+    font-size: 25px;
+  }
+  
+  .heading-right .create-ticket-btn {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .heading-right .plus-icon {
+    margin-right: 8px;
+  }
+  .plus-icon{
+    font-weight: 800;
+    font-size: 18px;
+  }
+  
+  .heading-right .create-ticket-btn:hover {
+    background-color: #45a049;
+  }
+  
+/* End of heading styling */
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ticket-status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #27ae60;
+    color: white;
+    font-weight: bold;
+}
+
+.ticket-details {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form Row for aligning fields */
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-row p {
+    flex: 1;
+}
+
+/* Input and Textarea Styles */
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Align fields in the same row */
+.ticket-info .form-row,
+.device-info .form-row,
+.ticket-meta .form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Actions Section */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    background-color: #999;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #797c7b;
+}
+
+/* Signature Styling */
+.signature img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Search filter and table styling */
+
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+}
+.search-box input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    flex: 1;
+}
+.search-box button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    flex: 1;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f4f4f4;
+    cursor: pointer;
+}
+/* End of search filter and table  */
+.status-button{
+        padding: 6px 12px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+}
+    
+.status-button:hover {
+        background-color: #0056b3;
+}
+    
+/* Apply hover effect and pointer cursor on table rows */
+#repairTable tbody tr {
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect - Change background color */
+#repairTable tbody tr:hover {
+    background-color: #f5f5f5; /* Light gray background */
+}
+
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

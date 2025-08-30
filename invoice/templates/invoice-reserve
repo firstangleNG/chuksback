@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block cssFile %}
+<link rel="stylesheet" href="{% static 'css/invoice.css' %}">
+{% endblock %}
+
+{% block content %}
+{% comment %}
+<form method="post" id="invoice-form" action="{% url 'create_invoice' %}">
+{% endcomment %}
+    {% csrf_token %}
+    <ul>
+        {% if messages %}
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>  
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+    <!-- Customer Information -->
+    <label for="customer_name">Customer Name:</label>
+    <input type="text" name="customer_name" required>
+
+    <h3>Invoice Items</h3>
+    <table id="invoice-items">
+        <thead>
+            <tr>
+                <th>Service Name</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Price per Unit</th>
+                <th>Taxes (%)</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="service_name[]" required></td>
+                <td><input type="text" name="description[]"></td>
+                <td><input type="number" name="quantity[]" class="quantity" min="1" value="1" required></td>
+                <td><input type="number" name="price_per_unit[]" class="price" step="0.01" required></td>
+                <td><input type="number" name="tax[]" class="tax" step="0.01" value="0"></td>
+                <td class="total">0.00</td>
+                <td><button type="button" class="remove-item">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Add New Item Button -->
+    <button type="button" id="add-item">Add Item</button>
+
+    <!-- Invoice Summary -->
+    <h3>Summary</h3>
+    <p>Subtotal: <span id="subtotal">0.00</span></p>
+    <p>Total Tax: <span id="total-tax">0.00</span></p>
+    <p>Final Amount: <span id="final-amount">0.00</span></p>
+
+    <!-- Payment Method -->
+    <label for="payment_method">Payment Method:</label>
+    <select name="payment_method" required>
+        <option value="credit_card">Credit/Debit Card</option>
+        <option value="cash">Cash</option>
+        <option value="paypal">PayPal</option>
+        <option value="stripe">Stripe</option>
+
+        <option value="bank_transfer">Bank Transfer</option>
+    </select>
+
+    <!-- Payment Status -->
+    <h3>Payment Status</h3>
+    <label for="payment_status">Select Payment Status:</label>
+    <select name="payment_status" required>
+        <option value="not_paid">Not Paid</option>
+        <option value="paid">Paid</option>
+    </select>
+
+    <!-- Submit and Print Buttons -->
+    <button type="submit">Save Invoice</button>
+    <button type="button" id="print-invoice">Print Invoice</button>
+    <a href="{% url 'invoice_list' %}" style="margin-left: 30px;">Invoices List</a>
+</form>
+<div>
+
+{% endblock %}
+
+{% block jsFile %}
+<script src="{% static 'js/invoice.js' %}"></script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

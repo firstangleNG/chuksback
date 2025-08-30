@@ -1,0 +1,28 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine # Use a recent, light PostgreSQL image
+    container_name: chukticketingsystem-db-1 # Added for clarity, as seen in your error messages
+    restart: always # Good practice for database containers
+    volumes:
+      - pg_data:/var/lib/postgresql/data # Persist database data
+    environment:
+<<<<<<< HEAD
+      POSTGRES_DB: chuk_db # <--- CHANGE THIS TO YOUR DESIRED DB NAME
+      POSTGRES_USER: chuk_user            # <--- CHANGE THIS TO YOUR DESIRED DB USER
+      POSTGRES_PASSWORD: Captain@247 # <--- CHANGE THIS TO A STRONG PASSWORD
+    ports:
+      - "all" # Map host port 5432 to container port 5432
+=======
+      POSTGRES_DB: repair_db # <--- CHANGE THIS TO YOUR DESIRED DB NAME
+      POSTGRES_USER: repair            # <--- CHANGE THIS TO YOUR DESIRED DB USER
+      POSTGRES_PASSWORD: Captain@248 # <--- CHANGE THIS TO A STRONG PASSWORD
+    ports:
+      - "5432:5432" # Map host port 5432 to container port 5432
+>>>>>>> fdb0914d301ecbeadcbae33a32296a0f61dc7f39
+
+# THIS IS THE MISSING PART: You need to define the named volume at the top level
+volumes:
+  pg_data: # This declares the named volume 'pg_data'

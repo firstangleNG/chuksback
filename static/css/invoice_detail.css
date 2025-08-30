@@ -1,0 +1,224 @@
+
+.container {
+    width: 100%;
+    /* margin: 40px auto; */
+    /* padding: 30px; */
+    background: red;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Invoice Information */
+.invoice-details p {
+    margin: 12px 0;
+    font-size: 16px;
+}
+
+.invoice-details strong {
+    color: #4CAF50;
+}
+
+
+.custom-select {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    color: #333;
+    appearance: none;      /* Remove default styling */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='5' viewBox='0 0 10 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L5 5L10 0H0Z' fill='%23333'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 5px;
+  }
+  
+/* Table Styling */
+.invoice-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-details thead {
+    /* background: #4CAF50; */
+    background-color: #f4f4f4;
+    /* color: white; */
+}
+
+.invoice-details th, .invoice-details td {
+    padding: 14px 18px;
+    text-align: left;
+}
+
+.invoice-details tbody tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+.invoice-details tbody tr:hover {
+    background: #e8f5e9;
+}
+
+/* Summary Section */
+.invoice-details .summary p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+/* Navigation Link */
+.invoice-details a  , .invoice-details button{
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 24px;
+    background: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: large;
+    font-weight: bold;
+}
+
+.invoice-details a:hover,.invoice-details button:hover {
+    background: #388E3C;
+}
+/* button{
+    font-size: large;
+    
+} */
+
+.cash-container{
+    font-weight: bolder;
+    font-size: larger;
+}
+
+
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #999;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #797c7b;;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .invoice-details th, .invoice-details td {
+        padding: 10px;
+    }
+
+    .invoice-details a , .invoice-details button{
+        padding: 10px 20px;
+    }
+}
+
+
+
+/* Style for the group of form items */
+.form-group-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* Style for each individual form item within the group */
+.form-group {
+    flex: 1;
+    margin-right: 10px; /* Space between fields */
+}
+
+/* Remove margin from the last item in a group */
+.form-group:last-child {
+    margin-right: 0;
+}
+
+/* Optionally adjust the input width to fit within the layout */
+input[type="text"], input[type="number"], select {
+    width: 100%;
+}
+
+
+/* Modal styles */
+.delete-modal {
+    display: none; 
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+  }
+  
+  .delete-modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* Adjust the size of the modal */
+  }
+  
+  .delete-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .delete-close {
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .delete-modal-footer {
+    text-align: right;
+  }
+  
+  .delete-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+  }
+  
+  .delete-btn-secondary {
+    background-color: #ccc;
+  }
+  
+  .delete-btn-danger {
+    background-color: #f44336;
+    color: white;
+  }
+  

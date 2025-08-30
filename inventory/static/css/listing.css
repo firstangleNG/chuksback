@@ -1,0 +1,325 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.inventory-container {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.modal-content {
+    height: 90vh; /* Limit the modal height to 80% of the viewport */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
+}
+
+/* Navbar */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info img {
+    border-radius: 50%;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background: #f0f0f0;
+}
+
+/* Header */
+.heading-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.heading-left p {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Add Item Button */
+.create-ticket-btn {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+  
+  .plus-icon {
+    margin-right: 8px;
+  }
+  .plus-icon{
+    font-weight: 800;
+    font-size: 18px;
+  }
+  
+  .create-ticket-btn:hover {
+    background-color: #45a049;
+  }
+  
+
+/* Filter Section */
+.filter-container {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.filter-container input, 
+.filter-container select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Inventory Table */
+#inventoryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#inventoryTable thead {
+    /* background-color: #c4ced8; */
+    background-color: #f4f4f4;
+    /* color: white; */
+}
+
+#inventoryTable th, #inventoryTable td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    overflow: auto;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    margin: 5% auto;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-close-btn {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Form Row - Fields in the Same Line */
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #999;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+}
+
+/* File Input */
+.form-group input[type="file"] {
+    padding: 10px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+}
+
+.form-group input[type="file"]:hover {
+    border-color: #999;
+}
+
+/* Checkbox Inline */
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group-checkbox input {
+    width: auto;
+}
+
+
+/* Button Styling */
+button {
+    padding: 15px;
+    background-color: #999;
+    color: #fff;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #797c7b;
+}
+
+/* .form-group {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+} */
+ 
+
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+small {
+    color: #666;
+    margin-bottom: 8px;
+}
+
+/* .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+} */
+
+/* .submit-btn:hover {
+    background-color: #45a049;
+} */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+    }
+
+    .heading-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-group {
+        flex-direction: column;
+    }
+} 

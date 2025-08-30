@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Barcode Scanner</title>{% endblock %}
+{% block cssFile %}<link rel="stylesheet" href="{% static 'css/barcode_scanner.css' %}">{% endblock %}
+
+{% block content %}
+<div class="barcode-scanner-container">
+    <h1>Barcode Scanner</h1>
+    <video id="scanner" autoplay></video>
+    <p id="scan-result">Scan a barcode or QR code</p>
+    <button id="start-scan" class="btn">Start Scanning</button>
+</div>
+{% endblock %}
+
+{% block jsFile %}
+<!-- <script src="{% static 'js/barcode_scanner.js' %}"></script> -->
+{% endblock %}

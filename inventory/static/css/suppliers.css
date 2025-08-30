@@ -1,0 +1,130 @@
+/* General Container Styling */
+.suppliers-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titles */
+.suppliers-container h1,
+.suppliers-container h2 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Supplier Form */
+.supplier-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.supplier-form .form-row {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.supplier-form label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.supplier-form input,
+.supplier-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.supplier-form button {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.supplier-form button:hover {
+    background: #45a049;
+}
+
+/* Supplier List */
+.supplier-list {
+    margin-top: 30px;
+}
+
+.supplier-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.supplier-card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    width: 270px;
+    text-align: center;
+}
+
+.supplier-card h3 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.supplier-card p {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.supplier-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-btn, .delete-btn {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.edit-btn {
+    background: #007bff;
+    color: white;
+}
+
+.delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.edit-btn:hover {
+    background: #0056b3;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+/* No Suppliers Message */
+.no-suppliers {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Low Stock Alerts</title>{% endblock %}
+{% block cssFile %}<link rel="stylesheet" href="{% static 'css/low_stock_alerts.css' %}">{% endblock %}
+
+{% block content %}
+<div class="alert-container">
+    <h1>Low Stock Alerts</h1>
+    {% if low_stock_items %}
+    <div class="alert-list">
+        {% for item in low_stock_items %}
+        <div class="alert-item">
+            <div class="alert-details">
+                <h3>{{ item.part_name }}</h3>
+                <p><strong>SKU:</strong> {{ item.sku }}</p>
+                <p><strong>Remaining Stock:</strong> {{ item.quantity_available }}</p>
+                <p class="alert-warning">Low Stock! Consider Restocking.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No low stock alerts at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -7,7 +7,7 @@ from .base import *
 DEBUG = True
 # ALLOWED_HOSTS = list (os.getenv("ALLOWED_HOSTS", ["185.113.249.94","firststore.codemeduck.com"]))
 
-ALLOWED_HOSTS = ['127.0.0.1',"102.212.247.252","chukticketingsystem.com",'www.chukticketingsystem.com', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1',"102.212.247.252","chukticketingsystem.com",'www.chukticketingsystem.com', '.vercel.app', 'chuksback.onrender.com']
 
 INSTALLED_APPS += ['django.contrib.postgres']
 

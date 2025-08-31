@@ -17,6 +17,8 @@ STATIC_ROOT = BASE_DIR / 'static'  # Where static files will be collected
 
 # CORS settings for production
 CORS_ALLOWED_ORIGINS = [
+    "https://computerhubuk.netlify.app",
+    "http://localhost:3000",
     "https://rphub.vercel.app",  # Your Vercel deployment
     "https://repairhub-delta.vercel.app",  # Additional Vercel deployment
     "https://chukticketingsystem.com",
@@ -36,6 +38,7 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://computerhubuk.netlify.app",
     'https://chukticketingsystem.com',
     'https://www.chukticketingsystem.com',
     'https://rphub.vercel.app',  # Add Vercel deployment

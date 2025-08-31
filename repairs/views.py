@@ -32,15 +32,6 @@ from repairs.models import RepairTicket
 #         if not used_ticket:  # If the ticket is unique, return it
 #             return ticket
         
-@api_view(['GET'])
-def ticket_detail(request, ticket_id):
-    try:
-        ticket = RepairTicket.objects.get(ticket_id=ticket_id)
-        serializer = RepairTicketSerializer(ticket)
-        return Response(serializer.data)
-    except RepairTicket.DoesNotExist:
-        return Response({'error': 'Ticket not found'}, status=404)
-
 from .models import RepairTicket
 # @login_required(login_url='/')
 def generate_ticket():

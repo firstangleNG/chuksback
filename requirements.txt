@@ -50,6 +50,7 @@ pypng==0.20220715.0
 PyQRCode==1.2.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
+phonenumbers==8.13.25
 radis==0.15
 redis==5.2.0
 requests==2.32.3
